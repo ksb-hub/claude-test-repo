@@ -149,11 +149,24 @@ def stage_all(repo_path):
 
 
 def unstage_file(repo_path, filepath):
-    _run(["restore", "--staged", filepath], cwd=repo_path)
+    try:
+        _run(["restore", "--staged", filepath], cwd=repo_path)
+    except RuntimeError as e:
+        # 한 번도 커밋된 적 없는 새 파일은 restore가 안 됨 → rm --cached 사용
+        if "pathspec" in str(e).lower() or "did not match" in str(e).lower():
+            _run(["rm", "--cached", filepath], cwd=repo_path)
+        else:
+            raise
 
 
 def unstage_all(repo_path):
-    _run(["restore", "--staged", "."], cwd=repo_path)
+    try:
+        _run(["restore", "--staged", "."], cwd=repo_path)
+    except RuntimeError as e:
+        if "pathspec" in str(e).lower() or "did not match" in str(e).lower():
+            _run(["rm", "--cached", "-r", "."], cwd=repo_path)
+        else:
+            raise
 
 
 def commit(repo_path, message):
