@@ -12,7 +12,7 @@ def _run(args, cwd):
     )
     if result.returncode != 0:
         raise RuntimeError(result.stderr.strip())
-    return result.stdout.strip()
+    return result.stdout.rstrip()  # rstrip만: 뒤 공백 제거, 앞 공백은 유지
 
 
 def get_local_branches(repo_path="."):
