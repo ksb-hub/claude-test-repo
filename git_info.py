@@ -124,13 +124,16 @@ STATUS_LABELS = {
     "R": "renamed",  "C": "copied", "?": "untracked",
 }
 
+_STATUS_RE = re.compile(r'^(.)(.) (.+)$')
+
 def get_status(repo_path):
     output = _run(["status", "--porcelain"], cwd=repo_path)
     staged, unstaged = [], []
     for line in output.splitlines():
-        if len(line) < 4:
+        m = _STATUS_RE.match(line)
+        if not m:
             continue
-        x, y, filepath = line[0], line[1], line[3:]
+        x, y, filepath = m.group(1), m.group(2), m.group(3)
         if x not in (" ", "?"):
             staged.append({"file": filepath, "code": x,
                            "label": STATUS_LABELS.get(x, x)})
@@ -178,6 +181,20 @@ def commit(repo_path, message):
 def get_graph(repo_path):
     return _run(["log", "--graph", "--oneline", "--all", "--decorate", "-50"],
                 cwd=repo_path)
+
+
+def discard_file(repo_path, filepath, untracked=False):
+    if untracked:
+        import os
+        full = os.path.join(repo_path, filepath)
+        if os.path.isfile(full):
+            os.remove(full)
+    else:
+        _run(["restore", filepath], cwd=repo_path)
+
+
+def discard_all_changes(repo_path):
+    _run(["restore", "."], cwd=repo_path)
 
 
 def checkout_branch(repo_path, branch):
