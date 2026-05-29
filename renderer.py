@@ -23,7 +23,7 @@ def render(info):
     for i, b in enumerate(local):
         connector = "`--" if i == len(local) - 1 else "|--"
         marker = "*" if b["current"] else " "
-        tracking = f"→ {b['remote']}" if b["remote"] else "(no remote)"
+        tracking = f"-> {b['remote']}" if b["remote"] else "(no remote)"
         tag = _status_tag(b)
         lines.append(f"  {connector} {marker} {b['name']:<20} {tracking:<30} {tag}")
 
