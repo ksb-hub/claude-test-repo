@@ -1,0 +1,38 @@
+{
+  "version": "2.0.0",
+  "tasks": [
+    {
+      "label": "Launch Git Branch Viewer",
+      "type": "shell",
+      "command": "python",
+      "args": [
+        "C:\\Users\\gayun\\Desktop\\project\\claude-test\\app.py",
+        "${workspaceFolder}"
+      ],
+      "options": {
+        "cwd": "C:\\Users\\gayun\\Desktop\\project\\claude-test"
+      },
+      "presentation": {
+        "reveal": "silent",
+        "panel": "dedicated",
+        "clear": true
+      },
+      "group": {
+        "kind": "build",
+        "isDefault": true
+      }
+    },
+    {
+      "label": "Sync Workspace to Git Viewer",
+      "type": "shell",
+      "command": "echo ${workspaceFolder} | Out-File -FilePath \"$env:TEMP\\gitviewer_path.txt\" -Encoding utf8 -NoNewline",
+      "presentation": {
+        "reveal": "never",
+        "panel": "shared"
+      },
+      "runOptions": {
+        "runOn": "folderOpen"
+      }
+    }
+  ]
+}
