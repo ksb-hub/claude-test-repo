@@ -167,6 +167,20 @@ def get_graph(repo_path):
                 cwd=repo_path)
 
 
+def checkout_branch(repo_path, branch):
+    _run(["checkout", branch], cwd=repo_path)
+
+
+def merge_branch(repo_path, branch, strategy="no-ff"):
+    args = ["merge"]
+    if strategy == "no-ff":
+        args.append("--no-ff")
+    elif strategy == "squash":
+        args.append("--squash")
+    args.append(branch)
+    _run(args, cwd=repo_path)
+
+
 def set_upstream(repo_path, local_branch, remote_branch):
     _run(["branch", f"--set-upstream-to={remote_branch}", local_branch], cwd=repo_path)
 
